@@ -1,5 +1,0 @@
-MARK LOUIE R. ABELONG
-3rd Year
-GAMING/BUSINESS/SPORTS
-qmlrabelong@tip.edu.ph
-i3-5005/4G/HDD 500GB
