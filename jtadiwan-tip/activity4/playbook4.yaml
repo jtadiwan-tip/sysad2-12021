@@ -1,0 +1,35 @@
+---
+- name: install-playbook
+  hosts: all
+
+  tasks:
+  - name: insofpip
+    pip:
+      name:
+        - ansible
+        - boto
+        - python-openstackclient 
+
+- name: centosinstall
+  hosts: centos
+
+  tasks:
+  - name: install-java
+    yum:
+      name: java-1.8.0-openjdk
+      state: present
+      update_cache: yes
+
+- name: ubuntuinstall
+  hosts: ubuntu
+
+  tasks:
+    - name: installjre
+      apt:
+        name: default-jre
+        state: present
+        update_cache: yes
+
+
+
+
