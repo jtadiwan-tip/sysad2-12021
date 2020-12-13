@@ -1,0 +1,14 @@
+---
+# tasks files for ubuntu
+ - name: install java
+   apt:
+     name: default-jre
+     state: present
+     upadte_cache: yes
+
+ - name: install ansible
+   pip:
+     name:
+       - ansible
+       - boto
+       - python-openstackclient
