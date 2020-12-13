@@ -1,3 +1,9 @@
-#How to install Apache, MySQL, PHP in Ubuntu
+# Install Linux, Apache, MySQL, and PHP in ubuntu
+
+Ansible Configuration - ansible.cfg
+
+Inventory File - inventory
+
+Playbook File - playbook.yaml
 
 
