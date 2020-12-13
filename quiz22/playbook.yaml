@@ -1,0 +1,41 @@
+---
+- name: Installing LAMP
+  hosts: all
+  tasks:
+    - name: Installing apache, mysql, php
+      become: yes
+      apt:
+        pkg:
+          - apache2
+          - mysql-server
+          - php
+          - php-mysql
+        state: present
+        update_cache: yes
+
+    - name: start apache
+      become: yes
+      become_user: root
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+    - name: Prompt mysql
+      become: yes
+      become_user: root
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: create target dir
+      file: path=/var/www/html state=directory mode=0755
+
+    - name: creating index file
+      become: yes
+      copy:
+        src: /tmp/index.html
+        dest: /var/www/html/index.html
+
+          
