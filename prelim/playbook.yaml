@@ -1,0 +1,16 @@
+---
+- name: prelim
+  hosts: ubuntu
+
+  tasks:
+    - name: config
+      include_vars:
+        file: config.yaml
+
+- name: Roles
+  hosts: ubuntu
+  roles:
+    - python
+    - java
+    - change-motd
+    - create_user

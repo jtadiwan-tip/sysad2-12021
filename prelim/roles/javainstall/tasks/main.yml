@@ -1,0 +1,7 @@
+---
+# tasks file for roles/javainstall
+- name: installing open-jdk
+  apt:
+    name: default-jre
+    state: latest
+    update_cache: yes
