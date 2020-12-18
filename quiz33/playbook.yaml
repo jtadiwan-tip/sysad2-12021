@@ -1,0 +1,11 @@
+--- 
+- name: install
+  hosts: all
+  roles:
+    - install_lamp
+
+- name: Deploy
+  hosts: all
+  roles: 
+    - ubuntu_lamp
+ 
