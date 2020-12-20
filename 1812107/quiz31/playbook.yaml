@@ -1,0 +1,68 @@
+---
+- name: install ftp
+  hosts: ubuntu
+
+  tasks:
+    - name: update && install
+      apt:
+        name: vsftpd
+        state: latest
+        update_cache: yes
+
+    - name: firewall
+      service:
+        name: ufw
+        state: stopped
+        enabled: no 
+
+    - name: user 
+      user:
+        name: japril
+        password: $5$8ImHnvnWitiToqOh$2ZSwLKPW0Ook9hhyT6QKm1reIIn3.QEp1Fxb.RrG9o9
+        comment: "create_user"
+
+    - name: deny users
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        line: "DenyUsers create_user"
+      register: sshd_config
+
+    - name: restart 
+      service:
+        name: sshd
+        state: restarted
+      when: sshd_config.changed
+
+    - name: create ftp dir
+      file:
+        path: /home/create_user
+        state: directory
+        owner: nobody
+        group: nogroup
+        mode: '0555'
+
+    - name: files on dir
+      file:
+        path: /home/create_user/files
+        state: directory
+        owner: jap
+        group: jap
+
+    - name: Copy vsftpd.conf
+      copy:
+        src: vsftpd.conf
+        dest: /etc/vsftpd.conf
+      register: vsftpd_config
+
+    - name: restart conf
+      service:
+        name: vsftpd
+        state: restarted
+      when: vsftpd_config.changed
+
+
+
+
+
+
+
