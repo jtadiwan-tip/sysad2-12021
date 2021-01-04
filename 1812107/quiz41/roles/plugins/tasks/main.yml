@@ -1,0 +1,28 @@
+---
+# tasks file for roles/plugins
+- name: unarchive
+  unarchive:
+    src: /downloads/nagios-plugins-2.3.3.tar.gz
+    dest: /downloads
+    remote_src: yes
+
+- name: group
+  command: ./configure --with-nagios-user-nagios --with-nagios-group=nagios
+  args:
+    chdir: /downloads/nagios-plugins-2.3.3
+
+- name: make dir
+  make:
+    chdir: /downloads/nagios-plugins-2.3.3
+  become: yes
+
+- name: install
+  make:
+    target: install
+    chdir: /downloads/nagios-plugins-2.3.3
+  become: yes
+
+- name: state
+  service:
+    name: nagios
+    state: started

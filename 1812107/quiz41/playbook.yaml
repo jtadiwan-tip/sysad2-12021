@@ -1,0 +1,7 @@
+--- 
+- name: installation
+  hosts: ubuntu
+  roles:
+    - installation
+    - configuration
+    - plugins
