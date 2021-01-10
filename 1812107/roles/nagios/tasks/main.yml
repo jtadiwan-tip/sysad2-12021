@@ -1,0 +1,32 @@
+---
+# tasks file for roles/nagios
+- name: install
+  apt:
+    name:
+      - build-essential
+      - apache2
+      - php
+      - openssl
+      - perl
+      - make
+      - php-gd
+      - libgd-dev
+      - libapache2-mod-php
+      - libperl-dev 
+      - libssl-dev
+      - daemon
+      - wget
+      - apache2-utils
+      - unzip
+    state: latest
+    update_cache: yes
+
+- name: nagcmd
+  group:
+    name: nagcmd
+    state: present
+    
+- name: user
+  user:
+    name: nagios
+    group: nagcmd

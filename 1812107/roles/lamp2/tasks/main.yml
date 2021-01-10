@@ -1,0 +1,72 @@
+---
+# tasks file for roles/lamp2
+- name: install
+  yum:
+    name: httpd
+    state: latest
+    update_cache: yes
+
+- name: adding 
+  copy:
+    content: "test"
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: '0664'
+  register: httpd
+
+- name: start
+  service:
+    name: httpd
+    state: started
+  when: httpd.changed
+
+- name: stop
+  service:
+    name: firewalld
+    state: stopped
+
+- name: mariadb
+  yum:
+    name: mariadb-server
+    state: latest
+    update_cache: yes
+
+- name: add
+  copy:
+    content: "test"
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: '0664'
+  register: mysql
+
+- name: start
+  service:
+    name: mariadb
+    state: started
+  when: mysql.changed
+
+- name: install
+  yum:
+    name:
+      - php
+      - php-mysql
+    state: latest
+    update_cache: yes
+
+- name: add 
+  copy:
+    content: "test"
+    dest: /var/www/html/index2.html
+    owner: root
+    group: root
+    mode: '0664'
+  register: php
+
+- name: restart
+  service:
+    name: httpd
+    state: restarted
+  when: php.changed
+

@@ -1,0 +1,97 @@
+---
+# tasks file for roles/elastic1
+- name: install stack
+  yum:
+    name: java-11-opendjk-devel
+    state: present
+    update_cache: yes
+
+- name: search repo
+  yum_repository:
+    name: Elastic_7.X_repo
+    baseurl: https://artifacts.elastic.co/packages/7.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: install key
+  rpm_key:
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: elastic search
+  yum:
+    name: elasticsearch
+    state: present
+    update_cache: yes
+
+- name: update conf
+  lineinfile:
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    regexp: 'http.port:'
+    line: 'http.port: 9200'
+
+- name: start it
+  service:
+    name: elasticsearch
+    state: started
+
+- name: logstash
+  yum_repository:
+    name: Elastic Repo for 7.x 
+    base_url: https://artifacts.elastic.co/packages/7.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic/co/GPG-key-elasticsearch
+    enabled: yes
+    description: Elastic 7.x packages repo
+
+- name: install logstash
+  yum:
+    name: logstash
+    state: present
+    update_cache: yes
+
+- name: update
+  lineinfile:
+    destfile: /etc/logstash/logstash.yml
+    regexp: 'http.hosts:'
+    line: 'http.host: 127.0.0.1'
+
+- name: start logstash
+  service:
+    name: logstash
+    state: started
+
+- name: kibana repo
+  yum_repository:
+    name: Kibana 7.x packages
+    baseurl: https://artifacts.elastic.co/packages/7.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    enables: yes
+    description: Kibana-7.x
+
+- name: installing kibana 
+  yum:
+    name: kibana
+    state: present
+    update_cache: yes
+
+- name: update conf
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.host:'
+    line: 'server.host: 0.0.0.0'
+
+- name: update conf anotha one
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.port:'
+    line: 'server.port: 5601'
+
+- name: start kibana
+  service:
+    name: kibana
+    state: started
+
+

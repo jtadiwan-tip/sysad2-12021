@@ -1,0 +1,51 @@
+---
+# tasks file for roles/nagios1
+- name: dl
+  unarchive:
+    src: https://sourceforge.net/projects/files/nagios-4.x/magios-4.4.6/nagios-4.4.6.tar.gz
+    dest: /tmp
+    copy: no
+
+- name: conf
+  command: ./configure --with-nagios-group=nagcmd --with-command-group=nagcmd --with-httpd_conf=/etc/apache2/sites-enabled
+  args:
+    chdir: /tmp/nagios-4.4.6
+
+- name: compile
+  make:
+    chdir: /tmp/nagios-4.4.6
+    target: clean
+
+- name: compile
+  make:
+    chdir: /tmp/nagios-4.4.6
+    target: all
+
+- name: install
+  make:
+    target: install
+    chdir: /tmp/nagios-4.4.6
+
+- name: init
+  make:
+    target: install-config
+    chdir: /tmp/nagios-4.4.6
+
+- name: compile
+  make:
+    target: install-commandmode
+    chdir: /tmp/nagios-4.4.6
+
+- name: add user
+  htpasswd:
+    path: /usr/local/nagios/etc/htpasswd/users
+    name: "{{ user }}"
+    password: "{{ pass }}"
+
+- name: cgi
+  command: a2enmod cgi
+
+- name: restart
+  service:
+    name: apache2
+    state: restarted

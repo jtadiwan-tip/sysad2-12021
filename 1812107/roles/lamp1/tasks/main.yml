@@ -1,0 +1,63 @@
+---
+# tasks file for roles/lamp1
+- name: ins
+  apt:
+    name: apache2
+    state: latest
+    upadte_cache: yes
+
+- name: add 
+  copy:
+    content: "Hello World"
+    dest: /ver/www/html/index.html
+    owner: root
+    group: root
+    mode: '0664'
+  register: apache_index
+
+- name: start
+  service:
+    name: apache2
+    state: restarted
+    enabled: yes
+  when: apache_index.changed
+
+- name: whitelist
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: install
+  apt:
+    name: mysql-server
+    state: latest
+    update_cache: yes
+
+- name: add
+  copy:
+    content: "Hi World"
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: '0664'
+  register: mysql_index
+
+- name: install php
+  apt:
+    name:
+      - php
+      - php-mysql
+      - libapache2-mod-php
+    state: latest
+    update_cache: yes
+
+- name: add php
+  copy:
+    content: "Cong tv"
+    dest: /var/www/html/index2.html
+    owner: root
+    group: root
+    mode: '0664'
+
+
