@@ -1,0 +1,61 @@
+---
+# tasks file for roles/elk
+- name: docker
+  apt:
+    name: docker.io
+    state: latest
+    upate_cache: yes
+  register: docker
+
+- name: installing pip
+  apt:
+    name: python3
+    state: latest
+    update_cache: true
+  with_items:
+    - python3
+    - python3-pip
+
+- pip:
+    name: docker-py
+    executable: pip3
+    state: latest
+
+- docker_image:
+    name: traefik
+
+- name: docker.py
+  pip:
+    name: docker.py
+    state: latest
+  when: docker.changed
+
+- name: network
+  docker_image:
+    name: docker.elastic.co/kibana/kibana:7.10.1
+
+- name: container els
+  docker_container:
+    name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    state: present
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - name: elastic
+
+- name: kibana
+  docke_container:
+    name: kibana
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    state: present
+    ports:
+      - "5601:5601"
+    networks:
+      name: elastic
+
+- name: logstash
+  docker_image:
+    name: docker.elastic.co/kibana/kibana:7.10.1
+    

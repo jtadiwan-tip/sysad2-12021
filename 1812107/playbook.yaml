@@ -1,0 +1,7 @@
+---
+
+- name: install elk
+  hosts: ubuntu
+  roles:
+    - elk1
+
