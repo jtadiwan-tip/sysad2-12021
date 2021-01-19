@@ -1,0 +1,9 @@
+---
+- name: installation 
+  hosts: ubuntu
+
+  roles:
+    - install1
+
+
+
