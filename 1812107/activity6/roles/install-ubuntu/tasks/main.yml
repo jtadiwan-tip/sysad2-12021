@@ -1,0 +1,27 @@
+---
+# tasks file for roles/install-ubuntu
+- name: httpd
+  apt:
+    name: isc-dhcp-server
+    state: latest
+    update_cache: yes
+
+- name: bind
+  apt:
+    name: bind9
+    state: latest
+
+- name: vsftpd
+  apt:
+    name: vsftpd
+    state: latest
+
+- name: apache2
+  apt:
+    name: apache2
+    state: latest
+
+- name: mariadb
+  apt:
+    name: mariadb-server-10.3
+    state: latest
