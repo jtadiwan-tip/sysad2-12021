@@ -1,0 +1,7 @@
+---
+- name: installing 
+  hosts: ubuntu
+  roles:
+    - docker
+    - me
+    - packages

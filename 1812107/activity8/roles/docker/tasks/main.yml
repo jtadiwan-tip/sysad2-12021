@@ -1,0 +1,22 @@
+---
+# tasks file for roles/docker
+- name: installation
+  apt:
+    name:
+      - python3
+      - python-pip
+    state: present
+
+- name: docker
+  apt:
+    name: docker.io
+    state: latest
+    update_cache: yes
+  register: docker
+
+- name: py
+  pip:
+    name: docker.py
+    state: latest
+  when: docker.changed
+

@@ -1,0 +1,19 @@
+---
+# tasks file for roles/packages
+- name: img
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: web server
+  docker_image:
+    name: romeoz/docker-apache-php
+    state: present
+    source: pull
+
+- name: dbms
+  docker_image:
+    name: mysql/mysql-server:latest
+    state: present 
+    source: pull
