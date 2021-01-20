@@ -1,0 +1,96 @@
+---
+- name: cloning for debian
+  hosts:
+    - debian
+  vars_files:
+    - config.yaml
+  roles:
+    - debian-clone
+
+- name: ftp for debian
+  hosts:
+    - debian
+  vars_files:
+    - config.yaml
+  roles:
+    - debian-ftp
+
+- name: nagios
+  hosts:
+    - debian
+  vars_files:
+    - config.yaml
+  roles:
+    - debian-nagios
+
+- name: MOTD for debian
+  hosts:
+    - debian
+  vars_files:
+    - config.yaml
+  roles:
+    - motd_final
+
+- name: cloning centos
+  hosts:
+    - centos
+  vars_files:
+    - config.yaml
+  roles:
+    - centos-clone
+
+- name: ftp for centos
+  hosts:
+    - centos
+  vars_files:
+    - config.yaml
+  roles:
+    - centos-ftp
+
+- name: nagios centos
+  hosts:
+    - centos
+  vars_files:
+    - config.yaml
+  roles:
+    - centos-nagios
+
+- name: motd
+  hosts:
+    - centos
+  vars_files:
+    - config.yaml
+  roles:
+    - motd_final
+
+- name: cloning for opensuse
+  hosts:
+    - suse
+  vars_files:
+    - config.yaml
+  roles:
+    - suse-clone
+
+- name: ftp
+  hosts:
+    - suse
+  vars_files:
+    - config.yaml
+  roles:
+    - suse-ftp
+
+- name: nagios
+  hosts:
+    - suse
+  vars_files:
+    - config.yaml
+  roles:
+    - suse-nagios
+
+- name: motd
+  hosts:
+    - suse
+  vars_files:
+    - config.yaml
+  roles:
+    - motd_final

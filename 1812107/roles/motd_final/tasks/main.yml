@@ -1,0 +1,6 @@
+---
+# tasks file for roles/motd_final
+- name: motd
+  lineinfile:
+    path: /etc/motd
+    line: Ansible Managed by '{{ username }}'

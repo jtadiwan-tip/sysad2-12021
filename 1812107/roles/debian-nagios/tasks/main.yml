@@ -1,0 +1,123 @@
+---
+# tasks file for roles/debian-nagios 
+- name: pkg
+  apt:
+    name:
+      - build-essential
+      - unzip
+      - openssl
+      - apache2
+      - php
+      - libapache2-mod-php
+      - php-gd
+      - libgd-dev
+    state: latest
+    update_cache: yes
+
+- name: group
+  group:
+    name: nagios
+    state: present
+
+- name: nagcmd
+  group:
+    name: nagcmd
+    state: present
+
+- name: user
+  user:
+    name: nagios
+    shell: /bin/bash
+    comment: nagios user
+    groups: nagios
+    password: '{{ naguser_pass }}'
+
+- name: commands
+  user:
+    name: nagios
+    groups: nagcmd
+    append: yes
+
+- name: www-data
+  user:
+    name: www-data
+    groups: nagcmd
+    append: yes
+
+- name: dir
+  file:
+    path: /downloads
+    state: directory
+    owner: nobody
+    group: nogroup
+
+- name: get file
+  get_url:
+    url: https://prdownloads.sourceforge.org/download/nagios-plugins-2.3.3.tar.gz
+    dest: /downloads
+    remote_src: yes
+
+- name: config
+  shell: ./configure --with-command-group=nagcmd --with-command=nagcmd --with-httpd_conf=/etc/apache2/sites-enabled/
+  args:
+    chdir: /downloads/nagios-4.2.1
+
+- name: nagioscore
+  make:
+    chdir: /downloads/nagios-4.2.1
+    target: all
+
+- name: binaries
+  make:
+    chdir: /downloads/nagios-4.2.1
+    target: install
+
+- name: script
+  make:
+    chdir: /downloads/nagios-4.2.1
+    target: install-daemoninit
+
+- name: config
+  make:
+    chdir: /downloads/nagios-4.2.1
+    target: install-config
+
+- name: commandmode
+  make:
+    chdir: /downloads/nagios-4.2.1
+    target: install-commandmode
+
+- name: webconf
+  make:
+    chdir: /downloads/nagios-4.2.1
+    target: install-webconf
+
+- name: enable
+  shell: 'a2enmod rewrite cgi'
+
+- name: pip install
+  apt:
+    name: python3-pip
+    state: latest
+    update_cache: yes
+
+- name: httpd
+  pip:
+    name: passlib
+    state: latest
+
+- name: nagios account
+  htpasswd:
+    path: /usr/local/nagios/etc/htpasswd.users
+    name: nagiosadmin
+    password: '{{ nagadmin_pass }}'
+    owner: www-data
+    group: www-data
+
+- name: restart
+  service:
+    name: apache2
+    state: reloaded
+
+- name: service
+  shell: '/etc/init.d/nagios start'

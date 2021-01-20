@@ -1,0 +1,52 @@
+---
+# tasks file for roles/centos-ftp
+- name: ftp
+  yum:
+    name: vsftpd
+    state: latest
+    update_cache: yes
+
+- name: en ftp
+  service:
+    name: vsftpd
+    state: started
+    enabled: yes
+
+- name: ftp user
+  user:
+    name: '{{ user}}'
+    password: '{{ ftp_pass }}'
+
+- name: denying users
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "DenyUsers '{{ user }}'"
+  register: successfully_denied
+
+- name: restart
+  service:
+    name: sshd
+    state: restarted
+  when: successfully_denied.changed
+
+- name: conf files
+  copy:
+    src: /etc/vsftpd/vsftpd.conf
+    dest: /eetc/vsftpd/vsftd.conf.default
+  remote_src: true
+
+- name: ftp
+  replace:
+    path: /etc/vsftpd/vsftpd.conf
+    regexp: '#chroot_local_user=YES'
+    replace: 'chroot_local_user=YES'
+
+- name: conf ftp
+  lineinfile:
+    path: /etc/vsftpd/vsftpd.conf
+    line: '{{ ftpconf }}'
+
+- name: restart
+  service:
+    name: vsftpd
+    state: restarted

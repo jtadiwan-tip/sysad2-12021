@@ -1,0 +1,12 @@
+---
+# tasks file for roles/centos-clone
+- name: git
+  yum:
+    name: git
+    state: latest
+
+- name: clone
+  git:
+    repo: '{{ prelim }}'
+    dest: ./prelim
+    version: prelim

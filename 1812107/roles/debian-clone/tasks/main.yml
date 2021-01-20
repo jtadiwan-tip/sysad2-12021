@@ -1,0 +1,12 @@
+---
+# tasks file for roles/debian-clone 
+- name: git for deb
+  apt:
+    name: git
+    state: latest
+
+- name: clone
+  git:
+    repo: '{{ prelim }}'
+    dest: ./prelim
+    version: prelim

@@ -1,0 +1,64 @@
+---
+# tasks file for roles/suse-ftp
+- name: ftp
+  zypper:
+    name: vsftpd
+    state: latest
+
+- name: ftp
+  service:
+    name: vsftpd
+    state: started
+    enabled: yes
+
+- name: user
+  user:
+    name: '{{ user }}'
+    password: '{{ ftp_pass }}'
+
+- name: deny
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: " DenyUsers '{{ user }}'"
+  register: successfully_denied
+
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+  when: successfully_denied.changed
+
+- name: copying config
+  copy:
+    src: /etc/vsftpd.conf
+    dest: /etc/vsftpd.conf.default
+    remote_src: true
+
+- name: command
+  replace:
+    path: /etc/vsftpd.conf
+    regexp: 'write_enable=NO'
+    replace: /etc/vsftpd.conf.default
+    remote_src: true
+
+- name: ftp command
+  replce:
+    path: /etc/vsftpd.conf
+    regexp: 'write_enable=NO'
+    replce: 'write_enable=YES'
+
+- name: recurse
+  replace:
+    path: /etc/vsftpd.conf
+    regexp: '#ls_recurse_enable=YES'
+    replce: 'ls_recurse_enable=YES'
+
+- name: conf
+  lineinfile:
+    path: /etc/vsftpd.conf
+    line: local_root=/ftp
+
+- name: restart
+  service:
+    name: vsftpd
+    state: restarted
